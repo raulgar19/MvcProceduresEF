@@ -48,9 +48,28 @@ namespace MvcProceduresEF.Repositories
         {
             string sql = "SP_ALL_ESPECIALIDADES";
 
-            var consulta = await this.context.Database.SqlQueryRaw<string>(sql).ToListAsync();
+            using (DbCommand com = this.context.Database.GetDbConnection().CreateCommand())
+            {
+                com.CommandType = CommandType.StoredProcedure;
+                com.CommandText = sql;
 
-            return consulta;
+                await com.Connection.OpenAsync();
+
+                DbDataReader reader = await com.ExecuteReaderAsync();
+
+                List<string> especialidades = new List<string>();
+
+                while (await reader.ReadAsync())
+                {
+                    string especialidad = reader.GetString(0);
+                    especialidades.Add(especialidad);
+                }
+
+                await reader.CloseAsync();
+                await com.Connection.CloseAsync();
+
+                return especialidades;
+            }
         }
 
         public async Task<List<Doctor>> GetDoctoresAsync()
