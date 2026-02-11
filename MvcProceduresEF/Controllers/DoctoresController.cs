@@ -9,7 +9,7 @@ namespace MvcProceduresEF.Controllers
     {
         private RepositoryDoctores repo;
 
-        public DoctoresController (RepositoryDoctores repo)
+        public DoctoresController(RepositoryDoctores repo)
         {
             this.repo = repo;
         }
@@ -17,70 +17,34 @@ namespace MvcProceduresEF.Controllers
         public async Task<IActionResult> Index()
         {
             List<string> especialidades = await this.repo.GetEspecialidadesAsync();
-            List<Doctor> doctores = await this.repo.GetDoctoresAsync();
 
-            DoctorViewModel model = new DoctorViewModel
-            {
-                Especialidades = especialidades,
-                Doctores = doctores
-            };
-            
-            return View(model);
+            ViewData["ESPECIALIDADES"] = especialidades;
+
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(string especialidad)
+        public async Task<IActionResult> Index(string especialidad, int incremento, string accion)
         {
-            List<string> especialidades = await this.repo.GetEspecialidadesAsync();
-            List<Doctor> doctores = await this.repo.GetDoctoresEspecialidadAsync(especialidad);
-
-            DoctorViewModel model = new DoctorViewModel
+            if (accion.ToLower() == "incrementar")
             {
-                Especialidades = especialidades,
-                Doctores = doctores
-            };
+                await this.repo.UpdateDoctorEspecialidadAsync(especialidad, incremento);
+            }
 
-            ViewBag.EspecialidadSeleccionada = especialidad;
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ActualizarSP(string especialidad, int incremento)
-        {
-            await this.repo.ActualizarSalarioEspecialidadSPAsync(especialidad, incremento);
+            if (accion.ToLower() == "incrementaref")
+            {
+                await this.repo
+                    .UpdateDoctoresEspecialidadEFAsync(especialidad
+                    , incremento);
+            }
 
             List<string> especialidades = await this.repo.GetEspecialidadesAsync();
+
+            ViewData["ESPECIALIDADES"] = especialidades;
+
             List<Doctor> doctores = await this.repo.GetDoctoresEspecialidadAsync(especialidad);
 
-            DoctorViewModel model = new DoctorViewModel
-            {
-                Especialidades = especialidades,
-                Doctores = doctores
-            };
-
-            ViewBag.EspecialidadSeleccionada = especialidad;
-
-            return View("Index", model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Actualizar(string especialidad, int incremento)
-        {
-            await this.repo.ActualizarSalarioEspecialidadAsync(especialidad, incremento);
-
-            List<string> especialidades = await this.repo.GetEspecialidadesAsync();
-            List<Doctor> doctores = await this.repo.GetDoctoresEspecialidadAsync(especialidad);
-
-            DoctorViewModel model = new DoctorViewModel
-            {
-                Especialidades = especialidades,
-                Doctores = doctores
-            };
-
-            ViewBag.EspecialidadSeleccionada = especialidad;
-
-            return View("Index", model);
+            return View(doctores);
         }
     }
 }
