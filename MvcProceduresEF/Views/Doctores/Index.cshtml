@@ -1,0 +1,59 @@
+﻿@model DoctorViewModel
+
+<h2>Actualizar Especialidades</h2>
+
+<form method="post" id="formDoctores">
+    <div class="mb-3">
+        <label for="especialidadSelect" class="form-label">Especialidad</label>
+        <select class="form-select" id="especialidadSelect" name="especialidad" onchange="document.getElementById('formDoctores').submit()">
+            @foreach (var especialidad in Model.Especialidades)
+            {
+                <option value="@especialidad" selected="@(ViewBag.EspecialidadSeleccionada == especialidad ? "selected" : null)">@especialidad</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="incremento" class="form-label">Incremento</label>
+        <input type="number" class="form-control" id="incremento" name="incremento" step="0.01" />
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary" asp-controller="Doctores" asp-action="ActualizarSP">Actualizar SP</button>
+        <button type="submit" class="btn btn-secondary" asp-controller="Doctores" asp-action="Actualizar">Actualizar</button>
+    </div>
+</form>
+
+<hr />
+
+<h3>Doctores</h3>
+@if (Model.Doctores != null && Model.Doctores.Count > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID Hospital</th>
+                <th>ID Doctor</th>
+                <th>Apellido</th>
+                <th>Especialidad</th>
+                <th>Salario</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var doctor in Model.Doctores)
+            {
+                <tr>
+                    <td>@doctor.IdHospital</td>
+                    <td>@doctor.IdDoctor</td>
+                    <td>@doctor.Apellido</td>
+                    <td>@doctor.Especialidad</td>
+                    <td>@doctor.Salario.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-center">Seleccione una especialidad para ver los doctores</p>
+}

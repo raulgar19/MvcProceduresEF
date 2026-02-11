@@ -49,9 +49,10 @@
                 @item.Nss
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Inscripcion" class="btn btn-info">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Inscripcion" class="btn btn-success">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Inscripcion" class="btn btn-danger">Delete</a>
+                    <a asp-action="Details" asp-route-inscripcion="@item.Inscripcion" class="btn btn-success">Details</a> |
+                    <a asp-action="Edit" asp-route-inscripcion="@item.Inscripcion" class="btn btn-info">Edit</a> |
+                    <a asp-action="Delete" asp-route-inscripcion="@item.Inscripcion" class="btn btn-danger">Delete</a> |
+                    <a asp-action="DeleteRaw" asp-route-inscripcion="@item.Inscripcion" class="btn btn-danger">Delete Raw</a>
             </td>
         </tr>
 }
