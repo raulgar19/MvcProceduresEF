@@ -11,24 +11,24 @@ using System.Numerics;
 namespace MvcProceduresEF.Repositories
 {
     #region PROCEDURES
-    //create procedure SP_ESPECIALIDADES_DOCTOR
-    //as
-    //    select distinct ESPECIALIDAD from DOCTOR
-    //go
-
-    //create procedure SP_UPDATE_DOCTOR_ESPE
-    //(@especialidad nvarchar(50), @incremento int)
-    //as
-    //    update DOCTOR set SALARIO = SALARIO + @incremento
-    //    where ESPECIALIDAD=@especialidad
-    //go
-
-    //create procedure SP_FINDDOCTORS_ESPE
-    //(@especialidad nvarchar(50))
-    //as
-    //    select * from DOCTOR
-    //    where ESPECIALIDAD=@especialidad
-    //go 
+    /*
+    create procedure SP_ESPECIALIDADES_DOCTOR
+    as
+	    select distinct ESPECIALIDAD from DOCTOR
+    go
+    create procedure SP_UPDATE_DOCTOR_ESPE
+    (@especialidad nvarchar(50), @incremento int)
+    as
+	    update DOCTOR set SALARIO = SALARIO + @incremento
+	    where ESPECIALIDAD=@especialidad
+    go
+    create procedure SP_FINDDOCTORS_ESPE
+    (@especialidad nvarchar(50))
+    as
+	    select * from DOCTOR
+	    where ESPECIALIDAD=@especialidad
+    go 
+    */
     #endregion
 
     public class RepositoryDoctores
@@ -88,19 +88,17 @@ namespace MvcProceduresEF.Repositories
                 (sql, pamInc, pamEspe);
         }
 
-        public async Task UpdateDoctoresEspecialidadEFAsync(string especialidad, int incremento)
+        public async Task UpdateDoctoresEspecialidadEFAsync
+            (string especialidad, int incremento)
         {
             var consulta = from datos in this.context.Doctores
                            where datos.Especialidad == especialidad
                            select datos;
-
             List<Doctor> doctores = await consulta.ToListAsync();
-
             foreach (Doctor doc in doctores)
             {
                 doc.Salario += incremento;
             }
-
             await this.context.SaveChangesAsync();
         }
     }
